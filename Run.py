@@ -1,22 +1,33 @@
-from main import Team
+from main import Team, Competition
 from Options import Opt
+import sys
 
-class Run():
-    def __init__(self):
-        name = input("What team would you like to explore? \n")
+class Run:
+    def __init__(self, comp=None):
+        if comp is None:
+            comp = input("What competition would you like to explore? \n")
+            try:
+                self.competition = Competition(comp)
+            except ValueError as e:
+                print(e)
+                print("\nPlease Try Again\n")
+                self.__init__()
+        name = input(f"What team would you like to explore in the {comp.strip().lower()}? \n")
         try:
-            self.options = Opt(name)
-            self.what_to_do()
+            self.team = Team(comp, name)
         except ValueError as e:
             print(e)
             print("\nPlease Try Again\n")
-            self.__init__()
+            self.__init__(comp)
+
+        self.options = Opt(comp, name)
+        self.what_to_do()
 
     def what_to_do(self):
         first_time = True
         while True:
             if first_time:
-                to_do = input(f"What woud you like to explore about {self.options.name}? \n").lower()
+                to_do = input(f"What would you like to explore about {self.options.name}? \n").lower()
                 first_time = False
             else:
                 to_do = input(f"\nWhat else would you like to explore about {self.options.name}? \n").lower()
@@ -28,8 +39,7 @@ class Run():
             elif "position" in to_do:
                 self.options.position()
             elif "exit" in to_do:
-                print("Exiting Program")
-                break
+                sys.exit("Exiting Programme...")
             else:
                 print("Invalid Request\nPlease Try Again")
                 return self.what_to_do()
