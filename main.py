@@ -39,7 +39,7 @@ class Team(Competition):
                 found = True
                 break
         if not found:
-            raise ValueError(f"{name} is not a valid premier league team, sorry.")
+            raise ValueError(f"{name} is not a valid {self.competition.strip()} team, sorry.")
 
         self.fixtures = []
 
