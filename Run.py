@@ -1,5 +1,6 @@
 from main import Team, Competition
 from Options import Opt
+from Stats import Stats
 import sys
 
 class Run:
@@ -40,6 +41,10 @@ class Run:
                 self.options.position()
             elif "exit" in to_do:
                 sys.exit("Exiting Programme...")
+            elif "stats" in to_do:
+                self.stats = Stats(self.team.competition, self.team.name)
+            elif "squad" in to_do:
+                self.options.squad()
             else:
                 print("Invalid Request\nPlease Try Again")
                 return self.what_to_do()

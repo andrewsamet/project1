@@ -33,3 +33,14 @@ class Opt(Team):
             if entry['team']['name'].lower().removesuffix("fc").strip() == self.name:
                 print(f"{entry['team']['name']} currently sit at position {entry['position']} in the table.")
                 break
+
+    def squad(self):
+        url = f"https://api.football-data.org/v4/teams/{self.team_id}"
+        response = requests.get(url, headers=self.get_headers())
+
+        squad = response.json()['squad']
+
+        for i in squad:
+            print(i['name'])
+
+
