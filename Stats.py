@@ -69,10 +69,16 @@ class Options_Comp(Competition):
 
             interpret = input("Would you like an interpretation of this 'r-value'?\n")
             if interpret == "yes":
-                if r_squared > 0.8:
-                    print(f"An 'r-value' of {r_squared:.2f} means strong correlation between {self.explanvar} and {self.responvar}")
+                if r_squared >= 0.9:
+                    print(f"An 'r-value' of {r_squared:.2f} means very strong correlation between {self.explanvar} and {self.responvar}\n")
+                elif 0.7 <= r_squared < 0.9:
+                    print(f"An 'r-value' of {r_squared:.2f} means strong correlation between {self.explanvar} and {self.responvar}\n")
+                elif 0.5 <= r_squared < 0.7:
+                    print(f"An 'r-value' of {r_squared:.2f} means moderate correlation between {self.explanvar} and {self.responvar}\n")
+                elif 0.3 <= r_squared < 0.5:
+                    print(f"An 'r-value' of {r_squared:.2f} means weak correlation between {self.explanvar} and {self.responvar}\n")
                 else:
-                    print(f"An 'r-value' of {r_squared:.2f} means weak correlation between {self.explanvar} and {self.responvar}")
+                    print(f"An 'r-value' of {r_squared:.2f} means there is no correlation between {self.explanvar} and {self.responvar}\n")
 
     def get_table(self):
         url = f"https://api.football-data.org/v4/competitions/{self.comp_id}/standings"

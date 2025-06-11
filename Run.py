@@ -41,11 +41,10 @@ class Run:
             if choice.lower().strip() == "competition":
                 while True:
                     self.stats = Options_Comp(self.competition.competition)
-                    opt = input("Please Select From The Following Options: A) Stats B) Table C) Main Menu D) Exit\n")
+                    opt = input("\nPlease Select From The Following Options: A) Stats B) Table C) Main Menu D) Exit\n")
                     if "stats" in opt.lower().strip():
                         self.stats.get_variables()
                         self.stats.get_stats()
-                        break
                     elif "table" in opt.lower().strip():
                         self.stats.get_table()
                     elif "main menu" in opt.lower().strip():
