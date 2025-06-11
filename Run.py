@@ -1,20 +1,26 @@
-from matplotlib.style.core import available
 from main import Team, Competition
 from Options import Options_Team
 from Stats import Options_Comp
 import requests
-import sys
 import os
 from dotenv import load_dotenv
 load_dotenv()
 api_token = os.getenv("API_TOKEN")
 
 class Run:
-
     def get_headers(self):
+        """
+        Returns: Method to get headers, more specifically to get my unique API token.
+        """
         return {"X-Auth-Token": f"{api_token}"}
 
     def __init__(self):
+        """
+        User selects a competition or can choose to see all valid competitions.
+        Then the user chooses whether to explore his competition or to explore a specific team.
+        If the user selects "team", ie to explore a specific team. Then he selects a specific team and
+        then self.what_to_do is called.
+        """
         available_comps = ['Premier League', 'Serie A', 'Bundesliga', 'Primera Division', 'Ligue 1']
         while True:
             comp = input("Please Select A Competition: (To See A List Of Valid Competitions Please Enter '?')\n")

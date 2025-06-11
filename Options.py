@@ -4,6 +4,7 @@ from main import Team
 class Options_Team(Team):
     def __init__(self, comp, name):
         super().__init__(comp, name)
+        self.fixtures = []
 
     def show_fixtures(self):
         url = f"https://api.football-data.org/v4/teams/{self.team_id}/matches"
