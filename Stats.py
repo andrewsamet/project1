@@ -14,6 +14,10 @@ class Options_Comp(Competition):
 
     def get_variables(self):
             while True:
+                exp = {"goalsFor" : 1,
+                    "goalsAgainst" : 2,
+                    "goalDifference" : 3
+                }
                 explanvar = input("Please Select From The Following Options For Your Explanatory Variable: 1) goalsFor 2) goalsAgainst 3) goalDifference\n")
                 if explanvar in ["goalsFor", "goalsAgainst", "goalDifference"]:
                     self.explanvar = explanvar

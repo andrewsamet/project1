@@ -27,24 +27,31 @@ class Run:
                 except ValueError as e:
                     print(e)
                     print("Please Try Again")
+                except requests.exceptions.HTTPError as errh:
+                    print("HTTP Error:", errh)
+                except requests.exceptions.ConnectionError as errc:
+                    print("Error Connecting to API:", errc)
+                except requests.exceptions.Timeout as errt:
+                    print("Request Timed Out:", errt)
+                except requests.exceptions.RequestException as err:
+                    print("Something went wrong with the request:", err)
 
         while True:
-            choice = input("Please Select From The Following Options:\nA) Competition B) Team\n")
-            if choice.lower().strip() == "competition" or "A":
+            choice = input("Please Select From The Following Options:\nA) Competition B) Team C) Main Menu D) Exit\n")
+            if choice.lower().strip() == "competition":
                 while True:
                     self.stats = Options_Comp(self.competition.competition)
                     opt = input("Please Select From The Following Options: A) Stats B) Table C) Main Menu D) Exit\n")
-                    if "stats" or "A" in opt.lower().strip():
+                    if "stats" in opt.lower().strip():
                         self.stats.get_variables()
                         self.stats.get_stats()
                         break
-                    elif "table" or "B" in opt.lower().strip():
+                    elif "table" in opt.lower().strip():
                         self.stats.get_table()
-                        break
-                    elif "main menu" or "C" in opt.lower().strip():
+                    elif "main menu" in opt.lower().strip():
                         self.__init__()
                         return
-                    elif "exit" or "D" in opt.lower().strip():
+                    elif "exit" in opt.lower().strip():
                         self.competition.exit()
                     else:
                         print("Invalid Option\nPlease Try Again\n")
@@ -68,21 +75,33 @@ class Run:
                             except ValueError as e:
                                 print(e)
                                 print("Please Try Again\n")
+                            except requests.exceptions.HTTPError as errh:
+                                print("HTTP Error:", errh)
+                            except requests.exceptions.ConnectionError as errc:
+                                print("Error Connecting to API:", errc)
+                            except requests.exceptions.Timeout as errt:
+                                print("Request Timed Out:", errt)
+                            except requests.exceptions.RequestException as err:
+                                print("Something went wrong with the request:", err)
+            elif choice.lower().strip() == "main menu":
+                self.__init__()
+            elif choice.lower().strip() == "exit":
+                self.competition.exit()
             else:
                 print("Invalid Option\nPlease Try Again\n")
 
     def what_to_do(self):
         while True:
                 to_do = input(f"Please Select From The Following Options: A) Fixtures B) Squad C) Position D) Main Menu E) Exit\n").lower()
-                if "fixture" or "A" in to_do or "fixtures" in to_do:
+                if "fixture" in to_do or "fixtures" in to_do:
                     self.options.show_fixtures()
-                elif "position" or "C" in to_do:
+                elif "position" in to_do:
                     self.options.position()
-                elif "exit" or "C" in to_do:
+                elif "exit" in to_do:
                     self.competition.exit()
-                elif "squad" or "B" in to_do:
+                elif "squad" in to_do:
                     self.options.squad()
-                elif "main menu" or "D" in to_do:
+                elif "main menu" in to_do:
                     self.__init__()
                     return
                 else:
