@@ -2,37 +2,38 @@
 from main import *
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
+# import seaborn as sns
 from sklearn.linear_model import LinearRegression
 
 
-class Stats(Team):
-    def __init__(self, comp, name, explanvar = None, responvar = None):
-        super().__init__(comp, name)
+class Options_Comp(Competition):
+    def __init__(self, comp, responvar = None, explanvar = None):
+        super().__init__(comp)
         self.explanvar = explanvar
         self.responvar = responvar
 
-        while self.explanvar not in ["goalsFor", "goalsAgainst", "goalDifference"]:
-                self.explanvar = input("Please choose from the following options for your explanatory variable: 1) goalsFor 2) goalsAgainst 3) goalDifference\n")
-                if self.explanvar in ["goalsFor", "goalsAgainst", "goalDifference"]:
+    def get_variables(self):
+            while True:
+                explanvar = input("Please Select From The Following Options For Your Explanatory Variable: 1) goalsFor 2) goalsAgainst 3) goalDifference\n")
+                if explanvar in ["goalsFor", "goalsAgainst", "goalDifference"]:
+                    self.explanvar = explanvar
                     break
                 else:
                     print("Invalid Explanatory Variable\nPlease Try Again")
-
-        while self.responvar not in ["won", "draw", "lost", "points"]:
-                self.responvar = input("Please choose from the following options for your response variable: 1) Won 2) Draw 3) Lost 4) Points\n")
-                if self.responvar in ["won", "draw", "lost", "points"]:
+            while True:
+                responvar = input("Please choose from the following options for your response variable: 1) Won 2) Draw 3) Lost 4) Points\n")
+                if responvar in ["won", "draw", "lost", "points"]:
+                    self.responvar = responvar
                     break
                 else:
                     print("Invalid Response Variable\nPlease Try Again")
 
-        print(f"Okay, you have selected your explanatory variable: {self.explanvar} and your response variable: {self.responvar}"
-              f"\nWe will now explore using a simpler linear regression to model the relationship between"
-              f"\n{self.explanvar.upper()} and {self.responvar.upper()}")
+            print(f"Okay, you have selected your explanatory variable: {self.explanvar} and your response variable: {self.responvar}"
+                  f"\nWe will now explore using a simpler linear regression to model the relationship between"
+                  f"\n{self.explanvar.upper()} and {self.responvar.upper()}")
 
-        self.get_stats(self.explanvar, self.responvar)
 
-    def get_stats(self, explanvar, responvar):
+    def get_stats(self):
         data = {}
         url = f"https://api.football-data.org/v4/competitions/{self.comp_id}/standings"
         response = (requests.get(url, headers=self.get_headers())).json()
@@ -69,7 +70,13 @@ class Stats(Team):
                 else:
                     print(f"An 'r-value' of {r_squared:.2f} means weak correlation between {self.explanvar} and {self.responvar}")
 
+    def get_table(self):
+        url = f"https://api.football-data.org/v4/competitions/{self.comp_id}/standings"
+        response = requests.get(url, headers=self.get_headers())
 
+        table = response.json()['standings'][0]['table']
+        for j, i in enumerate(table, start=1):
+            print(f"{j}. {i['team']['name']}")
 
 
 

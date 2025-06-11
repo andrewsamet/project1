@@ -1,56 +1,93 @@
+from matplotlib.style.core import available
 from main import Team, Competition
-from Options import Opt
-from Stats import Stats
+from Options import Options_Team
+from Stats import Options_Comp
+import requests
 import sys
+import os
+from dotenv import load_dotenv
+load_dotenv()
+api_token = os.getenv("API_TOKEN")
 
 class Run:
-    def __init__(self, comp=None):
-        if comp is None:
-            comp = input("What competition would you like to explore? \n")
-            try:
-                self.competition = Competition(comp)
-            except ValueError as e:
-                print(e)
-                print("\nPlease Try Again\n")
-                self.__init__()
-        name = input(f"What team would you like to explore in the {comp.strip().lower()}? \n")
-        try:
-            self.team = Team(comp, name)
-        except ValueError as e:
-            print(e)
-            print("\nPlease Try Again\n")
-            self.__init__(comp)
 
-        self.options = Opt(comp, name)
-        self.what_to_do()
+    def get_headers(self):
+        return {"X-Auth-Token": f"{api_token}"}
+
+    def __init__(self):
+        available_comps = ['Premier League', 'Serie A', 'Bundesliga', 'Primera Division', 'Ligue 1']
+        while True:
+            comp = input("Please Select A Competition: (To See A List Of Valid Competitions Please Enter '?')\n")
+            if comp == "?":
+                print("Available Competitions: "+", ".join(available_comps)+"\n")
+            else:
+                try:
+                    self.competition = Competition(comp)
+                    break
+                except ValueError as e:
+                    print(e)
+                    print("Please Try Again")
+
+        while True:
+            choice = input("Please Select From The Following Options:\nA) Competition B) Team\n")
+            if choice.lower().strip() == "competition" or "A":
+                while True:
+                    self.stats = Options_Comp(self.competition.competition)
+                    opt = input("Please Select From The Following Options: A) Stats B) Table C) Main Menu D) Exit\n")
+                    if "stats" or "A" in opt.lower().strip():
+                        self.stats.get_variables()
+                        self.stats.get_stats()
+                        break
+                    elif "table" or "B" in opt.lower().strip():
+                        self.stats.get_table()
+                        break
+                    elif "main menu" or "C" in opt.lower().strip():
+                        self.__init__()
+                        return
+                    elif "exit" or "D" in opt.lower().strip():
+                        self.competition.exit()
+                    else:
+                        print("Invalid Option\nPlease Try Again\n")
+
+            elif choice.lower().strip() == "team":
+                    while True:
+                        team = input(f"Please Select A Team In The {self.competition.competition.upper()} (To See A List Of Valid Teams In The {self.competition.competition.upper()} PLease Enter '?')?\n")
+                        if team == "?":
+                            teams = []
+                            url = f"https://api.football-data.org/v4/competitions/{self.competition.comp_id}/teams"
+                            response = requests.get(url, headers=self.get_headers())
+                            for i in response.json()['teams']:
+                                teams.append(i['name'])
+                            print("Available Teams: "+", ".join(teams)+"\n")
+                        else:
+                            try:
+                                self.team = Team(self.competition.competition, team)
+                                self.options = Options_Team(self.competition.competition, team)
+                                self.what_to_do()
+                                return
+                            except ValueError as e:
+                                print(e)
+                                print("Please Try Again\n")
+            else:
+                print("Invalid Option\nPlease Try Again\n")
 
     def what_to_do(self):
-        first_time = True
         while True:
-            if first_time:
-                to_do = input(f"What would you like to explore about {self.options.name}? \n").lower()
-                first_time = False
-            else:
-                to_do = input(f"\nWhat else would you like to explore about {self.options.name}? \n").lower()
-
-            if "fixture" in to_do or "fixtures" in to_do:
-                self.options.show_fixtures()
-            elif "table" in to_do:
-                self.options.see_table()
-            elif "position" in to_do:
-                self.options.position()
-            elif "exit" in to_do:
-                sys.exit("Exiting Programme...")
-            elif "stats" in to_do:
-                self.stats = Stats(self.team.competition, self.team.name)
-            elif "squad" in to_do:
-                self.options.squad()
-            else:
-                print("Invalid Request\nPlease Try Again")
-                return self.what_to_do()
-
-    # def exit(self):
-    #     return
+                to_do = input(f"Please Select From The Following Options: A) Fixtures B) Squad C) Position D) Main Menu E) Exit\n").lower()
+                if "fixture" or "A" in to_do or "fixtures" in to_do:
+                    self.options.show_fixtures()
+                elif "position" or "C" in to_do:
+                    self.options.position()
+                elif "exit" or "C" in to_do:
+                    self.competition.exit()
+                elif "squad" or "B" in to_do:
+                    self.options.squad()
+                elif "main menu" or "D" in to_do:
+                    self.__init__()
+                    return
+                else:
+                    print("Invalid Request\nPlease Try Again")
+                    return self.what_to_do()
 
 
 

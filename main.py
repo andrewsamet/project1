@@ -1,11 +1,11 @@
 import requests
+import sys
 import os
 from dotenv import load_dotenv
-# from Options import Opt
 load_dotenv()
 api_token = os.getenv("API_TOKEN")
 
-class Competition:
+class Competition():
     def get_headers(self):
         return {"X-Auth-Token": f"{api_token}"}
 
@@ -23,6 +23,9 @@ class Competition:
                 break
         if not found:
             raise ValueError(f"{self.competition} is not a valid competition, sorry.")
+
+    def exit(self):
+        sys.exit("Exiting...")
 
 class Team(Competition):
     def __init__(self, comp, name):

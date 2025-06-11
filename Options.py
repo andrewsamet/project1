@@ -1,7 +1,7 @@
 import requests
 from main import Team
 
-class Opt(Team):
+class Options_Team(Team):
     def __init__(self, comp, name):
         super().__init__(comp, name)
 
@@ -14,14 +14,6 @@ class Opt(Team):
             self.fixtures.append(f"{hometeam} vs {awayteam}")
         for i in self.fixtures:
             print(i)
-
-    def see_table(self):
-        url = f"https://api.football-data.org/v4/competitions/{self.comp_id}/standings"
-        response = requests.get(url, headers=self.get_headers())
-
-        table = response.json()['standings'][0]['table']
-        for j, i in enumerate(table, start=1):
-            print(f"{j}. {i['team']['name']}")
 
     def position(self):
         url = f"https://api.football-data.org/v4/competitions/{self.comp_id}/standings"
@@ -38,9 +30,14 @@ class Opt(Team):
         url = f"https://api.football-data.org/v4/teams/{self.team_id}"
         response = requests.get(url, headers=self.get_headers())
 
-        squad = response.json()['squad']
-
-        for i in squad:
-            print(i['name'])
+        try:
+            squad = response.json()['squad']
+            players = []
+            for i in squad:
+                players.append(i['name'])
+            print(f"{self.name.upper()} Squad: {', '.join(players)}")
+        except KeyError as e:
+            print(e)
+            print("Information Not Available")
 
 
