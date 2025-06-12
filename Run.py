@@ -21,6 +21,7 @@ class Run:
         If the user selects "team", ie to explore a specific team. Then he selects a specific team and
         then self.what_to_do is called.
         """
+        print("Welcome To My App. You Can Explore Information On Either A Competition Or A Team.\nPlease Note: Input Is Case Sensitive\n")
         available_comps = ['Premier League', 'Serie A', 'Bundesliga', 'Primera Division', 'Ligue 1']
         while True:
             comp = input("Please Select A Competition: (To See A List Of Valid Competitions Please Enter '?')\n")
@@ -96,6 +97,11 @@ class Run:
                 print("Invalid Option\nPlease Try Again\n")
 
     def what_to_do(self):
+        """
+        This method is to call whatever option the user chooses for his team.
+        Returns: depending on the user's choice, calls the relevant method.
+
+        """
         while True:
                 to_do = input(f"Please Select From The Following Options: A) Fixtures B) Squad C) Position D) Main Menu E) Exit\n").lower()
                 if "fixture" in to_do or "fixtures" in to_do:

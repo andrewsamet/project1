@@ -3,10 +3,21 @@ from main import Team
 
 class Options_Team(Team):
     def __init__(self, comp, name):
+        """
+        This constructor method is for the options for the team selection.
+        Args:
+            comp: valid competition required, which it inherits from Team
+            name: valid team name, which it inherits from Team.
+        """
         super().__init__(comp, name)
         self.fixtures = []
 
     def show_fixtures(self):
+        """
+        This method is to show all the fixtures available for the team.
+        Returns: the fixtures available for the team.
+
+        """
         url = f"https://api.football-data.org/v4/teams/{self.team_id}/matches"
         response = requests.get(url, headers=self.get_headers())
         for i in response.json()['matches']:
@@ -17,6 +28,11 @@ class Options_Team(Team):
             print(i)
 
     def position(self):
+        """
+        This method is to get the current position of the team in the table.
+        Returns: current position of the team in the table.
+
+        """
         url = f"https://api.football-data.org/v4/competitions/{self.comp_id}/standings"
         response = requests.get(url, headers=self.get_headers())
 
@@ -28,6 +44,11 @@ class Options_Team(Team):
                 break
 
     def squad(self):
+        """
+        This method is to get the entire current squad of the team selected.
+        Returns: the full squad of the team selected.
+
+        """
         url = f"https://api.football-data.org/v4/teams/{self.team_id}"
         response = requests.get(url, headers=self.get_headers())
 
